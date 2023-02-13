@@ -1,4 +1,5 @@
 # Code repository for CHIL'23 submission "Pre-training Graph Neural Networks for Brain Network Analysis".
+We will be updating the full implementation pipeline after acceptance. Thanks!
 ## Dataset
 The raw file for [PPMI](https://www.ppmi-info.org/) dataset used for pre-training can be accessed in the `Data/` folder
 ## Parameters
