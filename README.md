@@ -2,7 +2,7 @@
 [![Meta Figure](Figures/meta.png)](https://github.com/Owen-Yang-18/BrainNN-PreTrain/blob/main/Figures/meta.png)
 
 [![PTGB Figure](Figures/pipeline.png)](https://github.com/Owen-Yang-18/BrainNN-PreTrain/blob/main/Figures/pipeline.png)
-This repository contains the implementation of the frameworks presented in the [PTGB: Pre-Train Graph Neural Networks for Brain Network Analysis (CHIL 2023 **Oral**)](https://arxiv.org/pdf/2305.14376.pdf) and the [Data-Efficient Brain Connectome Analysis via Multi-Task Meta-Learning (SIGKDD 2022)](https://arxiv.org/pdf/2206.04486.pdf). The figures above present the visual illustrations of the workflow for GNN meta-learning (top) and self-supervised pre-training (bottom). For in-depth technical details, please kindly refer to the respective manuscripts.
+This repository contains the implementation of the frameworks presented in the [PTGB: Pre-Train Graph Neural Networks for Brain Network Analysis (CHIL 2023 **Oral**)](https://arxiv.org/pdf/2305.14376.pdf) and the [Data-Efficient Brain Connectome Analysis via Multi-Task Meta-Learning (SIGKDD 2022)](https://arxiv.org/pdf/2206.04486.pdf). The figures above present the visual illustrations for multi-task GNN meta-learning (top) and self-supervised pre-training (bottom). For in-depth technical details, please kindly refer to the respective manuscripts.
 <!---
 ## Figures
 The following figures present the visual illustrations of the workflow for GNN meta-learning (**Fig. 1**) and self-supervised pre-training (**Fig. 2**):
