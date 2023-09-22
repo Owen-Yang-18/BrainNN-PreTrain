@@ -1,7 +1,7 @@
 # Pre-Training and Meta-Learning of Graph Neural Networks for Brain Network Analysis
-[![Meta Figure](path_to_meta_figure.png)](link_to_algorithm_page)
+[![Meta Figure](Figures/meta.png)](https://github.com/Owen-Yang-18/BrainNN-PreTrain/blob/main/Figures/meta.png)
 
-[![PTGB Figure](path_to_ptgb_figure.png)](link_to_algorithm_page)
+[![PTGB Figure](Figures/pipeline.png)](https://github.com/Owen-Yang-18/BrainNN-PreTrain/blob/main/Figures/pipeline.png)
 
 This repository contains the implementation of the frameworks presented in the [CHIL 2023 (Oral) paper](http://www.cs.emory.edu/~jyang71/files/ptgb.pdf) and the [SIGKDD 2022 paper](http://www.cs.emory.edu/~jyang71/files/metabrain.pdf). Please refer to the manucsripts for technical details. The figures above present the visual overviews of the workflow for GNN meta-learning (top) and self-supervised pre-training (bottom).
 ## Dataset
