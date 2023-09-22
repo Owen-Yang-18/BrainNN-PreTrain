@@ -5,8 +5,10 @@
 
 This repository contains the implementation of the frameworks presented in the [PTGB: Pre-Train Graph Neural Networks for Brain Network Analysis (CHIL 2023 **Oral**)](https://arxiv.org/pdf/2305.14376.pdf) and the [Data-Efficient Brain Connectome Analysis via Multi-Task Meta-Learning (SIGKDD 2022)](https://arxiv.org/pdf/2206.04486.pdf). The figures above present the visual illustrations for multi-task GNN meta-learning (top) and self-supervised pre-training (bottom). For in-depth technical details, please kindly refer to the respective manuscripts.
 
+<!---
 ## Dataset
 The raw file for [PPMI](https://www.ppmi-info.org/) dataset used for pre-training can be accessed in the `Data/` folder. The `.mat` file stores the adjacency connections of smapled brain networks from **three** different tractography algorithms (aka. views). The `.xlsx` file stores the atlas template of **Desikan-Killiany 84** parcellation system, and is further processed/dumped into a numpy `.arr` file for faster look-up.
+-->
 ## Instructions
 1. Run the main file will start the pre-training process, all parameters are defaulted to following:
 - **backbone**, default = (GCN, GAT, GIN). The backbone encoder.
