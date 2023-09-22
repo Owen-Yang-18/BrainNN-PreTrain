@@ -13,7 +13,7 @@ The raw file for [PPMI](https://www.ppmi-info.org/) dataset used for pre-trainin
 - **rdim**, type = `int`. The dimension the atlas mapping pre-preocessing reduce to.
 - **filename**, type = `str`. The filename used to store the pre-trained parameters. Must be using the suffix `.pth`.
 ## Dependencies
-The frameworks require the following dependencies to operate:
+The frameworks require the following dependencies to operate *(latest versions are recommended):*
 ```
 torch~=1.10.2
 numpy~=1.22.2
