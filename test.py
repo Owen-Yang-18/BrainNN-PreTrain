@@ -100,7 +100,6 @@ def main():
     def test(backbone, rdim, file_name, ddim, dataset):
         ref_classifier = DownstreamClassifier(hidden_dim=ddim).to(device)
         kfold = KFold(n_splits=10, shuffle=True)
-        accuracy, auroc = [], []
         for fold, (train_ids, test_ids) in enumerate(kfold.split(dataset)):
           if backbone == "GIN":
             gconv = GIN(input_dim=rdim, hidden_dim=8, activation='relu', num_layers=args.layers).to(device)
@@ -141,8 +140,6 @@ def main():
                   pbar.update()
 
           auc, acc = tester(finetune_encoder, classifier, testloader)
-          accuracy.append(acc)
-          auroc.append(auc)
 
     for dataset in target_data:
         test(backbone=args.backbone, rdim=args.rdim, file_name=args.filename, ddim=args.ddim, dataset=dataset)
