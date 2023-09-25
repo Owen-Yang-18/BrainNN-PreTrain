@@ -1,15 +1,19 @@
 import argparse
 import torch
-from dataset import train_ae, TransformedDataset
+import os
 from tqdm.auto import tqdm
-from models import Encoder, Generator, device, GAT, GCN, GIN
+from dataset import TransformedDataset
+from models import GIN, GAT, Encoder, Generator, GCN, device
 from trainer import train
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--dir', type=str, default='/content/drive/MyDrive/', help='path to project directory')
     parser.add_argument('--backbone', type=str, default='GCN', help='backbone encoder')
-    parser.add_argument('--rdim', type=int, default=82, help='reduced dimension for atlas mapping preprocessing')
-    parser.add_argument('--filename', type=str, default='GPTB GCN.pth', help='file name to store pre-trained weights')
+    parser.add_argument('--rdim', type=int, default=64, help='reduced dimension for atlas mapping preprocessing')
+    parser.add_argument('--hdim', type=int, default=32, help='hidden dimension for GNN encoder')
+    parser.add_argument('--fdim', type=int, default=8, help='final hidden dimension for GNN encoder')
+    parser.add_argument('--filename', type=str, default='pretrained.pth', help='file name to store pre-trained weights')
     parser.add_argument('--lr', type=float, default=0.002, help='learning rate')
     parser.add_argument('--weight_decay', type=float, default=1e-5, help='l2 regularization for Adam optimizer')
     parser.add_argument('--patience', type=int, default=20, help='patience epoch for early stopping')
@@ -17,41 +21,26 @@ def main():
     parser.add_argument('--layers', type=int, default=4, help='number of layers')
     args = parser.parse_args()
 
-    train_ae("PPMI_PICO", args.rdim)
-    train_ae("PPMI_HOUGH", args.rdim)
-    train_ae("PPMI_FSL", args.rdim)
 
-    ppmi_pico_pos = TransformedDataset(root='', name='PPMI_PICO', view='pico', node_feature='adjacency', label=1.0)
-    ppmi_hough_pos = TransformedDataset(root='', name='PPMI_HOUGH', view='hough', node_feature='adjacency', label=1.0)
-    ppmi_fsl_pos = TransformedDataset(root='', name='PPMI_FSL', view='fsl', node_feature='adjacency', label=1.0)
+    source = os.listdir(args.dir + 'BrainNN-PreTrain/data/source')
 
-    ppmi_pico_neg = TransformedDataset(root='', name='PPMI_PICO', view='pico', node_feature='adjacency', label=0.0)
-    ppmi_hough_neg = TransformedDataset(root='', name='PPMI_HOUGH', view='hough', node_feature='adjacency', label=0.0)
-    ppmi_fsl_neg = TransformedDataset(root='', name='PPMI_FSL', view='fsl', node_feature='adjacency', label=0.0)
+    source_data = []
+    for name in source:
+        source_data.append(TransformedDataset(root=args.dir, name=name, st='source', rdim=args.rdim))
 
     def driver(backbone, rdim, file_name):
-        pos = []
-        neg = []
-
-        neg.append(ppmi_pico_neg)
-        neg.append(ppmi_hough_neg)
-        neg.append(ppmi_fsl_neg)
-
-        pos.append(ppmi_pico_pos)
-        pos.append(ppmi_hough_pos)
-        pos.append(ppmi_fsl_pos)
-
         if backbone == "GIN":
             gconv = GIN(input_dim=rdim, hidden_dim=8, activation='relu', num_layers=args.layers).to(device)
-            encoder_model = Encoder(encoder=gconv, hidden_dim=32).to(device)
+            encoder_model = Encoder(encoder=gconv).to(device)
         elif backbone == "GCN":
-            gconv = GCN(input_dim=rdim, hidden_dim=32, final_dim=8, activation='relu', num_layers=args.layers).to(device)
-            encoder_model = Encoder(encoder=gconv, hidden_dim=8).to(device)
+            gconv = GCN(input_dim=rdim, hidden_dim=args.hdim, final_dim=args.fdim, activation='relu', num_layers=args.layers).to(device)
+            encoder_model = Encoder(encoder=gconv).to(device)
         elif backbone == "GAT":
-            gconv = GAT(input_dim=rdim, hidden_dim=32, final_dim=8, activation='relu', num_layers=args.layers).to(device)
-            encoder_model = Encoder(encoder=gconv, hidden_dim=8).to(device)
+            gconv = GAT(input_dim=rdim, hidden_dim=args.hdim, final_dim=args.fdim, activation='relu', num_layers=args.layers).to(device)
+            encoder_model = Encoder(encoder=gconv).to(device)
         else:
             AssertionError
+
         meta_opt = torch.optim.Adam(encoder_model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(meta_opt, T_max=400, eta_min=0.0001)
         regularizer = Generator(num_layers=len(list(encoder_model.parameters()))).to(device)
@@ -62,7 +51,7 @@ def main():
 
         with tqdm(total=args.epoch, desc='Progress') as pbar:
             for i in range(args.epoch):
-                loss = train(encoder_model, regularizer, pos, neg, meta_opt, scheduler, i, backbone)
+                loss = train(encoder_model, regularizer, source_data, meta_opt, scheduler, i, backbone)
                 pbar.set_postfix({"loss": loss})
                 if loss < best:
                     best = loss
