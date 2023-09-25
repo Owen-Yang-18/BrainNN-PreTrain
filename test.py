@@ -130,8 +130,8 @@ def main():
               batch_size=20, sampler=test_subsampler)
 
 
-          with tqdm(total=147, desc='(T)') as pbar:
-              for i in range(147):
+          with tqdm(total=150, desc='(T)') as pbar:
+              for i in range(150):
                   l = updater(finetune_encoder, classifier, trainloader, optimizer, scheduler)
                   _, Acc = tester(finetune_encoder, classifier, testloader)
                   pbar.set_postfix({"loss": l})
